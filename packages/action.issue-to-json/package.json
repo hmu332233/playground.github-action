@@ -1,0 +1,13 @@
+{
+  "name": "action.issue-to-json",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo Hello!",
+    "build": "tsc -b"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}
