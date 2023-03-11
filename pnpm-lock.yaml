@@ -20,11 +20,13 @@ importers:
       '@actions/core': ^1.10.0
       '@actions/github': ^5.1.1
       '@types/shelljs': ^0.8.11
+      dayjs: ^1.11.7
       ics: ^3.1.0
       shelljs: ^0.8.5
     dependencies:
       '@actions/core': 1.10.0
       '@actions/github': 5.1.1
+      dayjs: 1.11.7
       ics: 3.1.0
       shelljs: 0.8.5
     devDependencies:
@@ -428,6 +430,13 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
+
+  /dayjs/1.11.7:
+    resolution:
+      {
+        integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==,
+      }
+    dev: false
 
   /debug/4.3.4:
     resolution:

@@ -4,6 +4,7 @@ import * as github from '@actions/github';
 import { createEvents, EventAttributes } from 'ics';
 import { createIcsFile, createJsonFile, readJsonFile } from './utils/file';
 import { commitAndPush } from './utils/git';
+import { getTimeArray } from './utils/date';
 
 type IssueMap = {
   [id: string]: Issue;
@@ -36,7 +37,8 @@ function convertToIcs(issues: Issue[]): string {
     const event: EventAttributes = {
       productId: 'minung--ics',
       calName: 'minung--ics 캘린더',
-      start: [2023, 3, 24, 0, 0],
+      start: getTimeArray('2023-03-24', 'Asia/Seoul'),
+      startInputType: 'utc',
       duration: { hours: 24 },
       title: issue.title,
       description: issue.body,

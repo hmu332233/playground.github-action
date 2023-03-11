@@ -14,6 +14,7 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
+    "dayjs": "^1.11.7",
     "ics": "^3.1.0",
     "shelljs": "^0.8.5"
   },

@@ -82,6 +82,7 @@ const github = __importStar(require('@actions/github'));
 const ics_1 = require('ics');
 const file_1 = require('./utils/file');
 const git_1 = require('./utils/git');
+const date_1 = require('./utils/date');
 function convertToIssue(payload) {
   const { issue } = payload;
   if (!issue) {
@@ -99,7 +100,8 @@ function convertToIcs(issues) {
     const event = {
       productId: 'minung--ics',
       calName: 'minung--ics 캘린더',
-      start: [2023, 3, 24, 0, 0],
+      start: (0, date_1.getTimeArray)('2023-03-24', 'Asia/Seoul'),
+      startInputType: 'utc',
       duration: { hours: 24 },
       title: issue.title,
       description: issue.body,
