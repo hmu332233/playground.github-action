@@ -13,6 +13,7 @@ async function run(): Promise<void> {
     if (context.payload.issue) {
       const issueNumber = context.payload.issue.number;
       core.info(`Issue #${issueNumber} opened`);
+      console.log(context.payload);
     }
   } catch (error) {
     core.setFailed(getErrorMessage(error));
