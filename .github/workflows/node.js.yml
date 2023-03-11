@@ -51,5 +51,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - run: pnpm --filter action.issue-to-json build
-      - run: pnpm --filter action.issue-to-json start
+      - run: pnpm --filter action.issue-to-ics build
+      - run: pnpm --filter action.issue-to-ics start
