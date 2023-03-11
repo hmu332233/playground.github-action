@@ -104,10 +104,11 @@ function run() {
       if (!issue) {
         return;
       }
-      const data = {};
+      const issueDirPath = './data/issues';
+      const data = (0, file_1.readJsonFile)(issueDirPath);
       data[issue.id] = issue;
-      (0, file_1.createFile)('./data/issues', data);
-      (0, git_1.commitAndPush)('./data/issues', 'Update issues');
+      (0, file_1.createJsonFile)(issueDirPath, data);
+      (0, git_1.commitAndPush)(issueDirPath, 'Update issues');
     } catch (error) {
       core.setFailed(getErrorMessage(error));
     }

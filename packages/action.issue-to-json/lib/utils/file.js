@@ -44,7 +44,7 @@ var __importStar =
     return result;
   };
 Object.defineProperty(exports, '__esModule', { value: true });
-exports.createFile = void 0;
+exports.readJsonFile = exports.createJsonFile = void 0;
 const fs = __importStar(require('fs'));
 function mkdir(dirPath) {
   const isExists = fs.existsSync(dirPath);
@@ -52,7 +52,7 @@ function mkdir(dirPath) {
     fs.mkdirSync(dirPath, { recursive: true });
   }
 }
-function createFile(path, data) {
+function createJsonFile(path, data) {
   const dateString = new Date().toISOString().slice(0, 10);
   const lastObj = {
     updatedAt: dateString,
@@ -61,4 +61,8 @@ function createFile(path, data) {
   fs.writeFileSync(`${path}/meta.json`, JSON.stringify(lastObj));
   fs.writeFileSync(`${path}/index.json`, JSON.stringify(data));
 }
-exports.createFile = createFile;
+exports.createJsonFile = createJsonFile;
+function readJsonFile(path) {
+  return JSON.parse(fs.readFileSync(`${path}/index.json`, 'utf8'));
+}
+exports.readJsonFile = readJsonFile;

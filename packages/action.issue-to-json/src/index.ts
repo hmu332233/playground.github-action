@@ -1,7 +1,7 @@
 import { WebhookPayload } from '@actions/github/lib/interfaces';
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import { createFile } from './utils/file';
+import { createJsonFile, readJsonFile } from './utils/file';
 import { commitAndPush } from './utils/git';
 
 type IssueMap = {
@@ -43,10 +43,13 @@ async function run(): Promise<void> {
       return;
     }
 
-    const data: IssueMap = {};
+    const issueDirPath = './data/issues';
+
+    const data = readJsonFile(issueDirPath) as IssueMap;
     data[issue.id] = issue;
-    createFile('./data/issues', data);
-    commitAndPush('./data/issues', 'Update issues');
+
+    createJsonFile(issueDirPath, data);
+    commitAndPush(issueDirPath, 'Update issues');
   } catch (error) {
     core.setFailed(getErrorMessage(error));
   }
