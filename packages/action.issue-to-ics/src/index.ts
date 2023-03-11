@@ -1,7 +1,8 @@
 import { WebhookPayload } from '@actions/github/lib/interfaces';
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import { createJsonFile, readJsonFile } from './utils/file';
+import { createEvents, EventAttributes } from 'ics';
+import { createIcsFile, createJsonFile, readJsonFile } from './utils/file';
 import { commitAndPush } from './utils/git';
 
 type IssueMap = {
@@ -30,6 +31,32 @@ function convertToIssue(payload: WebhookPayload): Issue | undefined {
   };
 }
 
+function convertToIcs(issues: Issue[]): string {
+  const events = issues.map((issue) => {
+    const event: EventAttributes = {
+      productId: 'minung--ics',
+      calName: 'minung--ics 캘린더',
+      start: [2023, 3, 24, 0, 0],
+      duration: { hours: 24 },
+      title: issue.title,
+      description: issue.body,
+      classification: 'PUBLIC',
+      status: 'CONFIRMED',
+      // busyStatus: 'BUSY',
+    };
+    return event;
+  });
+
+  const { error, value } = createEvents(events);
+
+  if (error) {
+    // TODO: throw로 에러 처리
+    return '';
+  }
+
+  return value || '';
+}
+
 function getErrorMessage(error: unknown) {
   if (error instanceof Error) return error.message;
   return String(error);
@@ -45,10 +72,13 @@ async function run(): Promise<void> {
 
     const issueDirPath = './data/issues';
 
-    const data = readJsonFile(issueDirPath) as IssueMap;
-    data[issue.id] = issue;
+    const issueMap = readJsonFile(issueDirPath) as IssueMap;
+    issueMap[issue.id] = issue;
 
-    createJsonFile(issueDirPath, data);
+    const icsString = convertToIcs(Object.values(issueMap));
+
+    createIcsFile(issueDirPath, icsString);
+    createJsonFile(issueDirPath, issueMap);
     commitAndPush(issueDirPath, 'Update issues');
   } catch (error) {
     core.setFailed(getErrorMessage(error));

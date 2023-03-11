@@ -44,7 +44,7 @@ var __importStar =
     return result;
   };
 Object.defineProperty(exports, '__esModule', { value: true });
-exports.readJsonFile = exports.createJsonFile = void 0;
+exports.readJsonFile = exports.createIcsFile = exports.createJsonFile = void 0;
 const fs = __importStar(require('fs'));
 function mkdir(dirPath) {
   const isExists = fs.existsSync(dirPath);
@@ -62,6 +62,11 @@ function createJsonFile(path, data) {
   fs.writeFileSync(`${path}/index.json`, JSON.stringify(data));
 }
 exports.createJsonFile = createJsonFile;
+function createIcsFile(path, data) {
+  mkdir(path);
+  fs.writeFileSync(`${path}/index.ics`, data);
+}
+exports.createIcsFile = createIcsFile;
 function readJsonFile(path) {
   return JSON.parse(fs.readFileSync(`${path}/index.json`, 'utf8'));
 }

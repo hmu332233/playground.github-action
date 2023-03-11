@@ -19,6 +19,11 @@ export function createJsonFile(path: string, data: any) {
   fs.writeFileSync(`${path}/index.json`, JSON.stringify(data));
 }
 
+export function createIcsFile(path: string, data: any) {
+  mkdir(path);
+  fs.writeFileSync(`${path}/index.ics`, data);
+}
+
 export function readJsonFile(path: string) {
   return JSON.parse(fs.readFileSync(`${path}/index.json`, 'utf8'));
 }

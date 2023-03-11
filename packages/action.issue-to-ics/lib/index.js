@@ -79,6 +79,7 @@ var __awaiter =
 Object.defineProperty(exports, '__esModule', { value: true });
 const core = __importStar(require('@actions/core'));
 const github = __importStar(require('@actions/github'));
+const ics_1 = require('ics');
 const file_1 = require('./utils/file');
 const git_1 = require('./utils/git');
 function convertToIssue(payload) {
@@ -93,6 +94,28 @@ function convertToIssue(payload) {
     body: issue.body || '',
   };
 }
+function convertToIcs(issues) {
+  const events = issues.map((issue) => {
+    const event = {
+      productId: 'minung--ics',
+      calName: 'minung--ics 캘린더',
+      start: [2023, 3, 24, 0, 0],
+      duration: { hours: 24 },
+      title: issue.title,
+      description: issue.body,
+      classification: 'PUBLIC',
+      status: 'CONFIRMED',
+      // busyStatus: 'BUSY',
+    };
+    return event;
+  });
+  const { error, value } = (0, ics_1.createEvents)(events);
+  if (error) {
+    // TODO: throw로 에러 처리
+    return '';
+  }
+  return value || '';
+}
 function getErrorMessage(error) {
   if (error instanceof Error) return error.message;
   return String(error);
@@ -105,9 +128,11 @@ function run() {
         return;
       }
       const issueDirPath = './data/issues';
-      const data = (0, file_1.readJsonFile)(issueDirPath);
-      data[issue.id] = issue;
-      (0, file_1.createJsonFile)(issueDirPath, data);
+      const issueMap = (0, file_1.readJsonFile)(issueDirPath);
+      issueMap[issue.id] = issue;
+      const icsString = convertToIcs(Object.values(issueMap));
+      (0, file_1.createIcsFile)(issueDirPath, icsString);
+      (0, file_1.createJsonFile)(issueDirPath, issueMap);
       (0, git_1.commitAndPush)(issueDirPath, 'Update issues');
     } catch (error) {
       core.setFailed(getErrorMessage(error));
