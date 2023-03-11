@@ -79,6 +79,20 @@ var __awaiter =
 Object.defineProperty(exports, '__esModule', { value: true });
 const core = __importStar(require('@actions/core'));
 const github = __importStar(require('@actions/github'));
+const file_1 = require('./utils/file');
+const git_1 = require('./utils/git');
+function convertToIssue(payload) {
+  const { issue } = payload;
+  if (!issue) {
+    return undefined;
+  }
+  return {
+    id: `${issue.id}`,
+    number: issue.number,
+    title: issue.title,
+    body: issue.body || '',
+  };
+}
 function getErrorMessage(error) {
   if (error instanceof Error) return error.message;
   return String(error);
@@ -86,12 +100,14 @@ function getErrorMessage(error) {
 function run() {
   return __awaiter(this, void 0, void 0, function* () {
     try {
-      const context = github.context;
-      if (context.payload.issue) {
-        const issueNumber = context.payload.issue.number;
-        core.info(`Issue #${issueNumber} opened`);
-        console.log(context.payload);
+      const issue = convertToIssue(github.context.payload);
+      if (!issue) {
+        return;
       }
+      const data = {};
+      data[issue.id] = issue;
+      (0, file_1.createFile)('./data/issues', data);
+      (0, git_1.commitAndPush)('./data/issues', 'Update issues');
     } catch (error) {
       core.setFailed(getErrorMessage(error));
     }
