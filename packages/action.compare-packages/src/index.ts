@@ -21,7 +21,7 @@ const packageNames = result.stdout
 
 // 추가된 패키지 목록 출력
 const result2 = exec(
-  'added_packages=($(git diff --name-only 4df8d33802750a93e8746031e73a4ec7f6cc35f3 HEAD | grep package.json | xargs cat | jq \'.dependencies | keys[]\' -r | paste -sd ", " -)); echo "${added_packages}"',
+  'added_packages=($(git diff --name-only 22dd0d33e7f84f2f4f2b68c0f15debff6d41f28a HEAD | grep package.json | xargs cat | jq \'.dependencies | keys[]\' -r | paste -sd ", " -)); echo "${added_packages}"',
   { silent: true },
 );
 
