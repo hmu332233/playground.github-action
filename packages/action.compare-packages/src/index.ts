@@ -13,11 +13,23 @@ if (result.code !== 0) {
   console.log(result.stderr);
 }
 
-const addedPackageNames = result.stdout
+const packageNames = result.stdout
   .split('\n')
   .map((v) => v.split('node_modules/')[1])
   .filter(Boolean)
   .join(', ');
+
+// 추가된 패키지 목록 출력
+const result2 = exec(
+  'added_packages=($(git diff --name-only 4df8d33802750a93e8746031e73a4ec7f6cc35f3 HEAD | grep package.json | xargs cat | jq \'.dependencies | keys[]\' -r | paste -sd ", " -)); echo "${added_packages}"',
+  { silent: true },
+);
+
+if (result2.code !== 0) {
+  console.log(result.stderr);
+}
+
+const addedPackageNames = result2.stdout;
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -38,7 +50,7 @@ B List: ${pkgNames2}`;
 }
 
 async function run() {
-  const content = createPrompt(addedPackageNames + ', jest', 'mocha');
+  const content = createPrompt(packageNames + ', jest', addedPackageNames);
   console.log(content);
   const completion = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
