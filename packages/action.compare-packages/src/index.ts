@@ -28,7 +28,7 @@ function createPrompt(pkgNames1: string, pkgNames2: string) {
   return `Please find a package with a similar purpose in A list and B list.
 
 If a similar package is found, please write it in the json format below.
-[ { name: "[package of A list found]", description: [explain the reason in one line] }]
+[ { "name": "[package of A list found]", "description": [explain the reason in one line] }]
 If no package similar to the target is found in the list, say "[]".
 Don't output anything in addition to Json format
   
