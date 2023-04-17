@@ -21,6 +21,6 @@ jobs:
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v3
         with:
-          issue-number: ${{ github.event.number }}
+          issue-number: ${{ github.event.issue.number }}
           body: |
             ${{ steps.compare-packages.outputs.RESULTS }}"
