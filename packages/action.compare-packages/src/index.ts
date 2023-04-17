@@ -1,3 +1,6 @@
+import * as core from '@actions/core';
+import * as github from '@actions/github';
+
 import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import { Configuration, OpenAIApi } from 'openai';
 import { exec } from 'shelljs';
@@ -25,7 +28,7 @@ function createPrompt(pkgNames1: string, pkgNames2: string) {
   return `Please find a package with a similar purpose in A list and B list.
 
 If a similar package is found, please write it in the json format below.
-[ { name: "[package of A list found]", Description: [explain the reason in one line] }]
+[ { name: "[package of A list found]", description: [explain the reason in one line] }]
 If no package similar to the target is found in the list, say "[]".
 Don't output anything in addition to Json format
   
@@ -44,6 +47,20 @@ async function run() {
 
   console.log(completion.data.usage);
   console.log(completion.data.choices);
+
+  const comparedPkgs = JSON.parse(
+    completion.data.choices[0].message?.content || '[]',
+  );
+  const resultsString = comparedPkgs
+    .map(
+      ({ name, description }: any) =>
+        `name: ${name}\ndescription: ${description}`,
+    )
+    .join('\n\n');
+
+  console.log(resultsString);
+
+  core.setOutput('RESULTS', resultsString);
 }
 
 run();
