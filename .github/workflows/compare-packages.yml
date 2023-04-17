@@ -6,7 +6,7 @@ name: compare-packages
 on:
   workflow_dispatch:
   issues:
-    types: [opened]
+    types: [opened, edited]
 
 jobs:
   post:
