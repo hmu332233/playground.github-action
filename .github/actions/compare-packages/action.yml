@@ -46,3 +46,5 @@ runs:
       shell: bash
       # run: pnpm --filter action.compare-packages start
       run: node packages/action.compare-packages/lib
+      env:
+        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
