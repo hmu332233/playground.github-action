@@ -44,5 +44,5 @@ runs:
 
     - name: Execute
       shell: bash
-      run: pnpm --filter action.compare-packages start
-    # run: node packages/action.compare-packages/lib
+      # run: pnpm --filter action.compare-packages start
+      run: node packages/action.compare-packages/lib
