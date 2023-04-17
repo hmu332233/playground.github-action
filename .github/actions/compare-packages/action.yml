@@ -37,6 +37,11 @@ runs:
     - name: Install dependencies
       run: pnpm install
 
-    - run: pnpm --filter action.compare-packages build
-    - run: pnpm --filter action.compare-packages start
-    # - run: node packages/action.compare-packages/lib
+    - name: Build
+      shell: bash
+      run: pnpm --filter action.compare-packages build
+
+    - name: Execute
+      shell: bash
+      run: pnpm --filter action.compare-packages start
+    # run: node packages/action.compare-packages/lib
