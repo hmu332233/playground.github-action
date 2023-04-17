@@ -14,8 +14,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/compare-packages
+      - name: Compare packages
         id: compare-packages
+        uses: ./.github/actions/compare-packages
         with:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       - name: Create comment
@@ -23,4 +24,4 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            ${{ steps.compare-packages.outputs.RESULTS }}"
+            ${{ steps.compare-packages.outputs.RESULTS }}

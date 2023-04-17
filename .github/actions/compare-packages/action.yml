@@ -3,6 +3,14 @@
 
 name: compare-packages
 
+inputs:
+  OPENAI_API_KEY:
+    required: true
+
+outputs:
+  RESULTS:
+    value: ${{ steps.Execute.outputs.RESULTS }}
+
 runs:
   using: 'composite'
   steps:
@@ -43,6 +51,7 @@ runs:
       run: pnpm --filter action.compare-packages build
 
     - name: Execute
+      id: Execute
       shell: bash
       # run: pnpm --filter action.compare-packages start
       run: node packages/action.compare-packages/lib
