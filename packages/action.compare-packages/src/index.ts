@@ -1,38 +1,8 @@
-// import { Configuration, OpenAIApi } from 'openai';
-
-// const configuration = new Configuration({
-//   // apiKey: process.env.OPENAI_API_KEY,
-// });
-// const openai = new OpenAIApi(configuration);
-
-// async function run() {
-//   const completion = await openai.createChatCompletion({
-//     model: 'gpt-3.5-turbo',
-//     messages: [{ role: 'user', content: 'Hello' }],
-//   });
-
-//   console.log(completion.data.choices);
-// }
-
-// run();
-
-// const { exec } = require('child_process');
-
-// exec('npm ls --json --depth=0', (error: any, stdout: any, stderr: any) => {
-//   if (error) {
-//     console.error(`exec error: ${error}`);
-//     return;
-//   }
-
-//   const packageList = stdout
-//     .split('\n')
-//     .filter((line: string) => line.includes('@'))
-//     .map((line: string) => line.trim().split('@')[0]);
-
-//   console.log(packageList);
-// });
-
+import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import { Configuration, OpenAIApi } from 'openai';
 import { exec } from 'shelljs';
+
+dotenv.config();
 
 const result = exec(`npm ls --parseable`, { silent: true });
 
@@ -40,4 +10,40 @@ if (result.code !== 0) {
   console.log(result.stderr);
 }
 
-console.log(result.stdout.split('\n'));
+const addedPackageNames = result.stdout
+  .split('\n')
+  .map((v) => v.split('node_modules/')[1])
+  .filter(Boolean)
+  .join(', ');
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
+function createPrompt(pkgNames1: string, pkgNames2: string) {
+  return `Please find a package with a similar purpose in A list and B list.
+
+If a similar package is found, please write it in the json format below.
+[ { name: "[package of A list found]", Description: [explain the reason in one line] }]
+If no package similar to the target is found in the list, say "[]".
+Don't output anything in addition to Json format
+  
+Here is lists.
+A List: ${pkgNames1}
+B List: ${pkgNames2}`;
+}
+
+async function run() {
+  const content = createPrompt(addedPackageNames + ', jest', 'mocha');
+  console.log(content);
+  const completion = await openai.createChatCompletion({
+    model: 'gpt-3.5-turbo',
+    messages: [{ role: 'user', content }],
+  });
+
+  console.log(completion.data.usage);
+  console.log(completion.data.choices);
+}
+
+run();
