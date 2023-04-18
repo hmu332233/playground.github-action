@@ -79,7 +79,7 @@ async function run() {
 
   console.log(resultsString);
 
-  core.setOutput('RESULTS', resultsString);
+  core.setOutput('RESULTS', resultsString || 'Not found similar package');
 }
 
 run();
