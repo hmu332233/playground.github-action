@@ -22,7 +22,12 @@ const packageNames = result.stdout
 const COMPARE_TARGET_BRANCH =
   process.env.COMPARE_TARGET_BRANCH || 'origin/main';
 
-console.log('compare', COMPARE_TARGET_BRANCH);
+console.log(
+  'compare',
+  COMPARE_TARGET_BRANCH,
+  github.context.payload.pull_request?.head.ref,
+  github.context.payload.pull_request?.head.sha,
+);
 
 exec('git symbolic-ref --short HEAD');
 
@@ -30,7 +35,7 @@ exec('git symbolic-ref --short HEAD');
 
 // 추가된 패키지 목록 출력
 const result2 = exec(
-  `git diff --name-only ${COMPARE_TARGET_BRANCH} origin/${github.context.payload.pull_request.head.ref} | grep package.json | xargs cat | jq -r '.dependencies | keys[]' | paste -sd ", "`,
+  `git diff --name-only ${COMPARE_TARGET_BRANCH} origin/${github.context.payload.pull_request?.head.ref} | grep package.json | xargs cat | jq -r '.dependencies | keys[]' | paste -sd ", "`,
   { silent: true },
 );
 
