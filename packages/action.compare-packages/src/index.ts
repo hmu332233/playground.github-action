@@ -21,13 +21,12 @@ const packageNames = result.stdout
 
 const COMPARE_TARGET_BRANCH =
   process.env.COMPARE_TARGET_BRANCH || 'origin/main';
-const targetSha = github.context.sha;
 
-console.log('compare', COMPARE_TARGET_BRANCH, targetSha);
+console.log('compare', COMPARE_TARGET_BRANCH);
 
 // 추가된 패키지 목록 출력
 const result2 = exec(
-  `git diff --name-only ${COMPARE_TARGET_BRANCH} ${targetSha} | grep package.json | xargs cat | jq -r '.dependencies | keys[]' | paste -sd ", "`,
+  `git diff --name-only ${COMPARE_TARGET_BRANCH} HEAD | grep package.json | xargs cat | jq -r '.dependencies | keys[]' | paste -sd ", "`,
   { silent: true },
 );
 
@@ -36,7 +35,7 @@ if (result2.code !== 0) {
 }
 
 const addedPackageNames = result2.stdout;
-console.log(addedPackageNames);
+console.log('addedPackageNames', addedPackageNames);
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
