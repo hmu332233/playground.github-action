@@ -5,6 +5,8 @@ name: contexts
 
 on:
   workflow_dispatch:
+  pull_request:
+    types: [opened, edited, deleted, closed]
   # issues:
   #   types: [opened, edited, deleted, closed]
   # issue_comment:
