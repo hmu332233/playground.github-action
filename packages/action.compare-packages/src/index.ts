@@ -26,9 +26,11 @@ console.log('compare', COMPARE_TARGET_BRANCH);
 
 exec('git symbolic-ref --short HEAD');
 
+// github.context.
+
 // 추가된 패키지 목록 출력
 const result2 = exec(
-  `git diff --name-only ${COMPARE_TARGET_BRANCH} HEAD | grep package.json | xargs cat | jq -r '.dependencies | keys[]' | paste -sd ", "`,
+  `git diff --name-only ${COMPARE_TARGET_BRANCH} origin/${github.context.payload.pull_request.head.ref} | grep package.json | xargs cat | jq -r '.dependencies | keys[]' | paste -sd ", "`,
   { silent: true },
 );
 
