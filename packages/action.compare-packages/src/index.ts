@@ -19,9 +19,15 @@ const packageNames = result.stdout
   .filter(Boolean)
   .join(', ');
 
+const COMPARE_TARGET_BRANCH =
+  process.env.COMPARE_TARGET_BRANCH || 'origin/main';
+const targetSha = github.context.sha;
+
+console.log('compare', COMPARE_TARGET_BRANCH, targetSha);
+
 // 추가된 패키지 목록 출력
 const result2 = exec(
-  `git diff --name-only 22dd0d33e7f84f2f4f2b68c0f15debff6d41f28a HEAD | grep package.json | xargs cat | jq -r '.dependencies | keys[]' | paste -sd ", "`,
+  `git diff --name-only ${COMPARE_TARGET_BRANCH} ${targetSha} | grep package.json | xargs cat | jq -r '.dependencies | keys[]' | paste -sd ", "`,
   { silent: true },
 );
 
