@@ -36,7 +36,7 @@ exec('git symbolic-ref --short HEAD');
 // 추가된 패키지 목록 출력
 const result2 = exec(
   // `git diff --name-only ${COMPARE_TARGET_BRANCH} ${targetSha} | grep package.json | xargs cat | jq -r '.dependencies | keys[]' | paste -sd ", "`,
-  `git diff ${COMPARE_TARGET_BRANCH} ${github.context.payload.pull_request?.head.sha} -- package.json | grep -E '^+' | grep -E '\\".+\\":\\s*\\".+\"' | sed -E 's/^.*\\"([^"]+)\\":.*$/\\1/' | tr '\\n' ',' | sed 's/,$//'`,
+  `git diff ${COMPARE_TARGET_BRANCH} origin/${github.context.payload.pull_request?.head.ref} -- package.json | grep -E '^+' | grep -E '\\".+\\":\\s*\\".+\"' | sed -E 's/^.*\\"([^"]+)\\":.*$/\\1/' | tr '\\n' ',' | sed 's/,$//'`,
   { silent: true },
 );
 
@@ -65,8 +65,13 @@ A List: ${pkgNames1}
 B List: ${pkgNames2}`;
 }
 
+function removeWhitespace(inputString: string) {
+  const regex = /\s/g;
+  return inputString.replace(regex, '');
+}
+
 async function run() {
-  if (!addedPackageNames) {
+  if (!removeWhitespace(addedPackageNames)) {
     return core.setOutput('RESULTS', '추가된 패키지가 없습니다.');
   }
 
