@@ -37,7 +37,11 @@ exec('git symbolic-ref --short HEAD');
 const result2 = exec(
   // `git diff --name-only ${COMPARE_TARGET_BRANCH} ${targetSha} | grep package.json | xargs cat | jq -r '.dependencies | keys[]' | paste -sd ", "`,
   `git diff ${COMPARE_TARGET_BRANCH} origin/${github.context.payload.pull_request?.head.ref} -- package.json | grep -E '^+' | grep -E '\\".+\\":\\s*\\".+\"' | sed -E 's/^.*\\"([^"]+)\\":.*$/\\1/' | tr '\\n' ',' | sed 's/,$//'`,
-  { silent: true },
+  // { silent: true },
+);
+
+console.log(
+  `git diff ${COMPARE_TARGET_BRANCH} origin/${github.context.payload.pull_request?.head.ref} -- package.json | grep -E '^+' | grep -E '\\".+\\":\\s*\\".+\"' | sed -E 's/^.*\\"([^"]+)\\":.*$/\\1/' | tr '\\n' ',' | sed 's/,$//'`,
 );
 
 if (result2.code !== 0) {
