@@ -13,11 +13,10 @@ if (result.code !== 0) {
   console.log(result.stderr);
 }
 
-const packageNames = result.stdout
+const packages = result.stdout
   .split('\n')
   .map((v) => v.split('node_modules/')[1])
-  .filter(Boolean)
-  .join(', ');
+  .filter(Boolean);
 
 const COMPARE_TARGET_BRANCH =
   process.env.COMPARE_TARGET_BRANCH || 'origin/main';
@@ -28,8 +27,6 @@ console.log(
   github.context.payload.pull_request?.head.ref,
   github.context.payload.pull_request?.head.sha,
 );
-
-exec('git symbolic-ref --short HEAD');
 
 // github.context.
 
@@ -48,15 +45,18 @@ if (result2.code !== 0) {
   console.log(result.stderr);
 }
 
-const addedPackageNames = result2.stdout;
-console.log('addedPackageNames', addedPackageNames);
+const addedPackages = result2.stdout.split(',');
+console.log('addedPackages', addedPackages);
+
+const originPackages = packages.filter((v) => !addedPackages.includes(v));
+console.log(originPackages);
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-function createPrompt(pkgNames1: string, pkgNames2: string) {
+function createPrompt(pkgNames1: string[], pkgNames2: string[]) {
   return `Please find a package with a similar purpose in A list and B list.
 
 If a similar package is found, please write it in the json format below.
@@ -65,8 +65,8 @@ If no package similar to the target is found in the list, say "[]".
 Don't output anything in addition to Json format
   
 Here is lists.
-A List: ${pkgNames1}
-B List: ${pkgNames2}`;
+A List: ${pkgNames1.join(',')}
+B List: ${pkgNames2.join(',')}`;
 }
 
 function removeWhitespace(inputString: string) {
@@ -75,11 +75,11 @@ function removeWhitespace(inputString: string) {
 }
 
 async function run() {
-  if (!removeWhitespace(addedPackageNames)) {
+  if (addedPackages.length === 0) {
     return core.setOutput('RESULTS', '추가된 패키지가 없습니다.');
   }
 
-  const content = createPrompt(packageNames + ', jest', addedPackageNames);
+  const content = createPrompt([...originPackages, 'jest'], addedPackages);
   console.log(content);
   const completion = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
