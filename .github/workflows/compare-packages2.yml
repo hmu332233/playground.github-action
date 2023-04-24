@@ -17,4 +17,4 @@ jobs:
     steps:
       - uses: hmu332233/action.compare-dependencies@v0.1.0
         with:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          openai_key: ${{ secrets.OPENAI_API_KEY }}
