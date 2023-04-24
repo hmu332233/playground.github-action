@@ -10,7 +10,8 @@ on:
   pull_request:
     types: [opened, edited]
 
-  jobs:
+jobs:
+  compare:
     runs-on: ubuntu-latest
 
     steps:
