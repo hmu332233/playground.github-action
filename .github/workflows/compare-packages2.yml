@@ -20,7 +20,7 @@ on:
           fetch-depth: 0
       - name: Compare packages
         id: compare-packages
-        uses: hmu332233/action.compare-dependencies@main
+        uses: hmu332233/action.compare-dependencies@v0.1.1
         with:
           openai_key: ${{ secrets.OPENAI_API_KEY }}
       - name: Create comment
