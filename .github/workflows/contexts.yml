@@ -55,3 +55,9 @@ jobs:
 
       - run: pnpm --filter action.contexts build
       - run: pnpm --filter action.contexts start
+      
+      - name: ref
+        shell: bash
+        run: |
+          echo "${{ github.base_ref }} --- ${{ github.head_ref }}"
+
