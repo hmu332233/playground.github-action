@@ -18,6 +18,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: action.similar-package-reviewer
+        id: compare-packages
+        uses: hmu332233/action.similar-package-reviewer@v1.0.1
+        with:
+          openai_key: ${{ secrets.OPENAI_API_KEY }}
       - name: Compare packages
         id: compare-packages
         uses: hmu332233/action.compare-dependencies@v1.0.0
