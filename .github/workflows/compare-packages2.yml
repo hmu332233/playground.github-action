@@ -19,10 +19,16 @@ jobs:
         with:
           fetch-depth: 0
       - name: action.similar-package-reviewer
-        id: compare-packages
+        id: compare-packages2
         uses: hmu332233/action.similar-package-reviewer@v1.0.1
         with:
           openai_key: ${{ secrets.OPENAI_API_KEY }}
+      - name: Create comment2
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ${{ steps.compare-packages2.outputs.results }}
       - name: Compare packages
         id: compare-packages
         uses: hmu332233/action.compare-dependencies@v1.0.0
