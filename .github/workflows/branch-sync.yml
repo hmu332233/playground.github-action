@@ -4,6 +4,7 @@
 name: Branch Sync
 
 on:
+  workflow_dispatch:
   push:
     branches: ["push"]
 
