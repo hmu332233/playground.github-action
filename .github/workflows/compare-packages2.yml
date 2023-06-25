@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 0
       - name: action.similar-package-reviewer
         id: compare-packages2
-        uses: hmu332233/action.similar-package-reviewer@v1.0.1
+        uses: hmu332233/action.similar-package-reviewer@v1.1.0-function-call
         with:
           openai_key: ${{ secrets.OPENAI_API_KEY }}
       - name: Create comment2
