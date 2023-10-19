@@ -29,15 +29,17 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             ${{ steps.compare-packages2.outputs.results }}
-      # - name: Compare packages
-      #   id: compare-packages
-      #   uses: hmu332233/action.similar-package-reviewer@v1.1.0
-      #   with:
-      #     openai_key: ${{ secrets.OPENAI_API_KEY }}
-      #     use_functioncall: true
-      # - name: Create comment
-      #   uses: peter-evans/create-or-update-comment@v3
-      #   with:
-      #     issue-number: ${{ github.event.pull_request.number }}
-      #     body: |
-      #       ${{ steps.compare-packages.outputs.results }}
+      - name: Compare packages
+        id: compare-packages
+        # uses: hmu332233/action.similar-package-reviewer@v1.1.0
+        uses: hmu332233/action.similar-package-reviewer@feature/select-model
+        with:
+          openai_key: ${{ secrets.OPENAI_API_KEY }}
+          use_functioncall: true
+          model: gpt-4
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ${{ steps.compare-packages.outputs.results }}
