@@ -24,4 +24,6 @@ runs:
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
+        GIT_AUTHOR_NAME: Minung Han
+        GIT_AUTHOR_EMAIL: hmu332233@gmail.com
       run: semantic-release --config ${{ github.action_path }}/release.config.js
