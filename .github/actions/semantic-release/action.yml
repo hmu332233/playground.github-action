@@ -1,0 +1,27 @@
+name: 'Semantic Release Action'
+description: 'A simple Semantic Release action with isolated semantic-release and custom config'
+inputs:
+  github-token:
+    description: 'GitHub token for authentication'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    # Node.js 환경 설정
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    # Semantic Release 및 플러그인 글로벌 설치 (버전 고정)
+    - name: Install Semantic Release Globally
+      shell: bash
+      run: npm install -g semantic-release@24.2.3 @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog@6.0.3 @semantic-release/git@10.0.1
+
+    # Semantic Release 실행 (패키지의 release.config.js 참조)
+    - name: Run Semantic Release
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: semantic-release --config ${{ github.action_path }}/release.config.js
